@@ -81,7 +81,7 @@ void matrix_multiply_threads(std::size_t size, int* input_A, int* input_B, int* 
 				size, input_A, input_B, output_C,
 				from, to));
 
-		to = from;
+		from = to;
 	}
 
 	for (std::thread & th : threads) {
