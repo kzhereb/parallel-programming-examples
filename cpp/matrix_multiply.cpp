@@ -110,24 +110,33 @@ void matrix_multiply_threads(std::size_t size, int* input_A, int* input_B, int* 
 }
 
 TEST_CASE("matrix multiply") {
-	std::size_t size = 100;
+	std::size_t size = 300;
 	int* A = create_matrix(size);
 	int* B = create_matrix(size);
 	int* C = create_matrix(size);
-	init_diagonal(size, A, 5);
-	init_diagonal(size, B, 3);
+	int valueA = 1234;
+	int valueB = 567;
+	init_diagonal(size, A, valueA);
+	init_diagonal(size, B, valueB);
 
 	SUBCASE("sequential") {
-		Timer timer{"sequential"};
-		matrix_multiply_sequential(size, A, B, C);
+
+		for(std::size_t run = 0; run < 10; run++) {
+			Timer timer{"sequential"};
+			matrix_multiply_sequential(size, A, B, C);
+		}
 	}
 	SUBCASE("threads") {
-		Timer timer{"threads"};
-		matrix_multiply_threads(size, A, B, C);
+
+		for(std::size_t run = 0; run < 10; run++) {
+			Timer timer{"threads"};
+			matrix_multiply_threads(size, A, B, C);
+		}
 	}
 
+
 	int* expected = create_matrix(size);
-	init_diagonal(size, expected, 15);
+	init_diagonal(size, expected, valueA*valueB);
 
 	CHECK(is_equal(size, C, expected));
 
