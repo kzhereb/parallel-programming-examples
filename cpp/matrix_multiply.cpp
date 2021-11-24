@@ -5,6 +5,7 @@
  *      Author: KZ
  */
 
+#include "matrix.h"
 #include "timer.h"
 
 #include "doctest.h"
@@ -15,45 +16,6 @@
 
 #include <cassert>
 
-
-
-int* create_matrix(std::size_t size) {
-	int* result = new int[size*size];
-	return result;
-}
-
-void init_diagonal(std::size_t size, int* matrix, int value) {
-	for(std::size_t i = 0; i < size; i++) {
-			for (std::size_t j = 0; j < size; j++) {
-				matrix[i*size+j] = (i==j) ? value : 0;
-			}
-	}
-}
-
-bool is_equal(std::size_t size, int* left, int* right) {
-	for(std::size_t i = 0; i < size; i++) {
-			for (std::size_t j = 0; j < size; j++) {
-				if (left[i*size+j] != right[i*size+j] ) { return false;}
-			}
-	}
-	return true;
-}
-
-
-void matrix_multiply_sequential(std::size_t size, int* input_A, int* input_B, int* output_C) {
-	for(std::size_t i = 0; i < size; i++) {
-			for (std::size_t j = 0; j < size; j++) {
-				output_C[i*size+j] = 0;
-			}
-	}
-	for(std::size_t i = 0; i < size; i++) {
-		for (std::size_t j = 0; j < size; j++) {
-			for (std::size_t k = 0; k < size; k++) {
-				output_C[i*size + j] += input_A[i*size + k] * input_B[k*size+j];
-			}
-		}
-	}
-}
 
 void multiply_on_single_thread(std::size_t size, int* input_A, int* input_B, int* output_C, std::size_t from, std::size_t to) {
 	for(std::size_t i = from; i < to; i++) {
@@ -97,9 +59,9 @@ void matrix_multiply_threads(std::size_t size, int* input_A, int* input_B, int* 
 
 TEST_CASE("matrix multiply") {
 	std::size_t size = 300;
-	int* A = create_matrix(size);
-	int* B = create_matrix(size);
-	int* C = create_matrix(size);
+	int* A = create_matrix<int>(size);
+	int* B = create_matrix<int>(size);
+	int* C = create_matrix<int>(size);
 	int valueA = 1234;
 	int valueB = 567;
 	init_diagonal(size, A, valueA);
@@ -121,7 +83,7 @@ TEST_CASE("matrix multiply") {
 	}
 
 
-	int* expected = create_matrix(size);
+	int* expected = create_matrix<int>(size);
 	init_diagonal(size, expected, valueA*valueB);
 
 	CHECK(is_equal(size, C, expected));
