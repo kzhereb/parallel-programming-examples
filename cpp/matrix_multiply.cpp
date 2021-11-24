@@ -5,31 +5,17 @@
  *      Author: KZ
  */
 
+#include "timer.h"
+
 #include "doctest.h"
 
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <chrono>
+
 #include <cassert>
 
 
-class Timer {
-private:
-	std::string name;
-	std::chrono::time_point<std::chrono::high_resolution_clock> start;
-public:
-	Timer(std::string name) {
-		this->name = name;
-		this->start = std::chrono::high_resolution_clock::now();
-	}
-	~Timer() {
-		auto end = std::chrono::high_resolution_clock::now();
-		std::cout << "Timer " << name << ": "
-				<< std::chrono::duration_cast<std::chrono::milliseconds>(
-						end - start).count() << "ms" << std::endl;
-	}
-};
 
 int* create_matrix(std::size_t size) {
 	int* result = new int[size*size];
